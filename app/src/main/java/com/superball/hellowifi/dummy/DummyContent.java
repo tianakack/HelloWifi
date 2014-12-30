@@ -1,5 +1,7 @@
 package com.superball.hellowifi.dummy;
 
+import android.util.SparseArray;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,18 +23,11 @@ public class DummyContent {
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
+    public static SparseArray<DummyItem> ITEM_MAP = new SparseArray<DummyItem>();
 
-    static {
-        // Add 3 sample items.
-        addItem(new DummyItem("1", "Item 1"));
-        addItem(new DummyItem("2", "Item 2"));
-        addItem(new DummyItem("3", "Item 3"));
-    }
-
-    private static void addItem(DummyItem item) {
+    public static void addItem(DummyItem item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        ITEM_MAP.put(item.idx, item);
     }
 
     public static void clear() {
@@ -44,11 +39,14 @@ public class DummyContent {
      * A dummy item representing a piece of content.
      */
     public static class DummyItem {
-        public String id;
+
+        private static int global_idx = 0;
+
+        public int idx;
         public String content;
 
-        public DummyItem(String id, String content) {
-            this.id = id;
+        public DummyItem(String content) {
+            this.idx = ++global_idx;
             this.content = content;
         }
 
@@ -56,9 +54,5 @@ public class DummyContent {
         public String toString() {
             return content;
         }
-    }
-
-    public static void reload() {
-        addItem(new DummyItem("3", "Item 3"));
     }
 }

@@ -1,6 +1,9 @@
 package com.superball.hellowifi;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -91,6 +94,9 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
 
+
+        reload();
+
         return view;
     }
 
@@ -117,7 +123,7 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
+            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).idx);
         }
     }
 
@@ -146,11 +152,22 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+        public void onFragmentInteraction(int id);
     }
 
     public void reload() {
-        DummyContent.reload();
+
+        DummyContent.clear();
+
+        WifiManager wifiManager = (WifiManager)getActivity(). getSystemService(Context.WIFI_SERVICE);
+
+        for (ScanResult scanResult : wifiManager.getScanResults())
+        {
+            DummyContent.addItem(new DummyContent.DummyItem(scanResult.SSID));
+        }
+
+        wifiManager.startScan();
+
         mAdapter.notifyDataSetChanged();
     }
 
