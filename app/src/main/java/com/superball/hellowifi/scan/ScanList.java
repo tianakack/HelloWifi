@@ -1,11 +1,12 @@
-package com.superball.hellowifi.dummy;
+package com.superball.hellowifi.scan;
 
+import android.net.wifi.ScanResult;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -13,7 +14,7 @@ import java.util.Map;
  * <p/>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class DummyContent {
+public class ScanList {
 
     /**
      * An array of sample (dummy) items.
@@ -35,6 +36,16 @@ public class DummyContent {
         ITEM_MAP.clear();
     }
 
+    public static void rearrange() {
+
+        Collections.sort(ITEMS, new Comparator<DummyItem>() {
+            @Override
+            public int compare(DummyItem lhs, DummyItem rhs) {
+                return lhs.content.SSID.compareTo(rhs.content.SSID);
+            }
+        });
+    }
+
     /**
      * A dummy item representing a piece of content.
      */
@@ -43,16 +54,16 @@ public class DummyContent {
         private static int global_idx = 0;
 
         public int idx;
-        public String content;
+        public ScanResult content;
 
-        public DummyItem(String content) {
+        public DummyItem(ScanResult content) {
             this.idx = ++global_idx;
             this.content = content;
         }
 
         @Override
         public String toString() {
-            return content;
+            return content.SSID;
         }
     }
 }

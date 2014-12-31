@@ -6,9 +6,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends ActionBarActivity implements ItemFragment.OnFragmentInteractionListener{
+public class MainActivity extends ActionBarActivity implements ScanListFragment.OnFragmentInteractionListener{
 
-    ItemFragment mItemFragment = new ItemFragment();
+    ScanListFragment mScanListFragment = null;
 
     public void onFragmentInteraction(int id)
     {
@@ -18,9 +18,11 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mScanListFragment = ScanListFragment.newInstance("", "");
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, mItemFragment)
+                    .add(R.id.container, mScanListFragment)
                     .commit();
         }
     }
@@ -42,7 +44,7 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
         {
             case R.id.action_reload:
             {
-                mItemFragment.reload();
+                mScanListFragment.reload();
             }
             return true;
 

@@ -16,7 +16,8 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 
-import com.superball.hellowifi.dummy.DummyContent;
+import com.superball.hellowifi.scan.ScanList;
+import com.superball.hellowifi.scan.ScanListAdapter;
 
 /**
  * A fragment representing a list of Items.
@@ -27,7 +28,7 @@ import com.superball.hellowifi.dummy.DummyContent;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class ItemFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class ScanListFragment extends Fragment implements AbsListView.OnItemClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,11 +50,11 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ArrayAdapter<DummyContent.DummyItem> mAdapter;
+    private ArrayAdapter<ScanList.DummyItem> mAdapter;
 
     // TODO: Rename and change types of parameters
-    public static ItemFragment newInstance(String param1, String param2) {
-        ItemFragment fragment = new ItemFragment();
+    public static ScanListFragment newInstance(String param1, String param2) {
+        ScanListFragment fragment = new ScanListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,7 +66,7 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ItemFragment() {
+    public ScanListFragment() {
     }
 
     @Override
@@ -78,8 +79,8 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
         }
 
         // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
+        mAdapter = new ScanListAdapter(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, ScanList.ITEMS);
     }
 
     @Override
@@ -89,7 +90,7 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
@@ -123,7 +124,7 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).idx);
+            mListener.onFragmentInteraction(ScanList.ITEMS.get(position).idx);
         }
     }
 
@@ -157,18 +158,23 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
 
     public void reload() {
 
-        DummyContent.clear();
+        ///
+        ScanList.clear();
 
         WifiManager wifiManager = (WifiManager)getActivity(). getSystemService(Context.WIFI_SERVICE);
 
         for (ScanResult scanResult : wifiManager.getScanResults())
         {
-            DummyContent.addItem(new DummyContent.DummyItem(scanResult.SSID));
+            ScanList.addItem(new ScanList.DummyItem(scanResult));
         }
 
-        wifiManager.startScan();
+        ScanList.rearrange();
 
+        ///
         mAdapter.notifyDataSetChanged();
+
+        ///
+        wifiManager.startScan();
     }
 
 }
