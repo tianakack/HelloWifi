@@ -17,8 +17,11 @@ import java.util.List;
  */
 public class ScanListAdapter extends ArrayAdapter<ScanList.ScanItem> {
 
+    private Context mContext;
+
     public ScanListAdapter(Context context, int resource, int textViewResourceId, List<ScanList.ScanItem> objects) {
         super(context, resource, textViewResourceId, objects);
+        mContext = context;
     }
 
     @Override
@@ -33,15 +36,15 @@ public class ScanListAdapter extends ArrayAdapter<ScanList.ScanItem> {
             ///
             ImageView image_signal = (ImageView) view.findViewById(R.id.scan_item_signal);
 
-            if (item.content.level >= -50) {
+            if (item.content.level > -50) {
 
                 image_signal.setImageResource(R.drawable.signal100);
 
-            } else if (item.content.level >= -75) {
+            } else if (item.content.level > -65) {
 
                 image_signal.setImageResource(R.drawable.signal75);
 
-            } else if (item.content.level >= -100) {
+            } else if (item.content.level > -80) {
 
                 image_signal.setImageResource(R.drawable.signal50);
 
@@ -54,13 +57,10 @@ public class ScanListAdapter extends ArrayAdapter<ScanList.ScanItem> {
             TextView text = (TextView) view.findViewById(R.id.scan_item_detail);
 
             text.setText(
-                    String.format("信号: %d dBm\n" +
-                                    "频率: %.3f GHz\n" +
-                                    "BSSID: %s\n" +
-                                    "%s",
+                    mContext.getString(R.string.scan_item_detail,
+                            item.content.BSSID.toUpperCase(),
                             item.content.level,
                             item.content.frequency / 1000.0,
-                            item.content.BSSID.toUpperCase(),
                             item.content.capabilities
                     )
             );

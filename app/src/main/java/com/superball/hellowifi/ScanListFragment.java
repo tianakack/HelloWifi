@@ -171,6 +171,58 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
         wifiManager.startScan();
     }
 
+    public void sort_by_ssid() {
+        mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+
+            @Override
+            public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+
+                return lhs.content.SSID.compareTo(rhs.content.SSID);
+            }
+        });
+
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void sort_by_bssid() {
+        mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+
+            @Override
+            public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+
+                return lhs.content.BSSID.compareTo(rhs.content.BSSID);
+            }
+        });
+
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void sort_by_rssi() {
+        mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+
+            @Override
+            public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+
+                return rhs.content.level - lhs.content.level;
+            }
+        });
+
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void sort_by_frequency() {
+        mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+
+            @Override
+            public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+
+                return lhs.content.frequency - rhs.content.frequency;
+            }
+        });
+
+        mAdapter.notifyDataSetChanged();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
