@@ -4,5 +4,7 @@
     <string name="app_name">HelloWifi</string>
     <string name="action_reload">Reload</string>
     <string name="action_menu">Menu</string>
+    <string name="scan_item_signal">ScanItemSignal</string>
+    <string name="scan_item_security">ScanItemSecurity</string>
 
 </resources>

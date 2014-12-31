@@ -4,8 +4,6 @@ import android.net.wifi.ScanResult;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -19,14 +17,14 @@ public class ScanList {
     /**
      * An array of sample (dummy) items.
      */
-    public static List<DummyItem> ITEMS = new ArrayList<DummyItem>();
+    public static List<ScanItem> ITEMS = new ArrayList<ScanItem>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static SparseArray<DummyItem> ITEM_MAP = new SparseArray<DummyItem>();
+    public static SparseArray<ScanItem> ITEM_MAP = new SparseArray<ScanItem>();
 
-    public static void addItem(DummyItem item) {
+    public static void addItem(ScanItem item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.idx, item);
     }
@@ -36,27 +34,17 @@ public class ScanList {
         ITEM_MAP.clear();
     }
 
-    public static void rearrange() {
-
-        Collections.sort(ITEMS, new Comparator<DummyItem>() {
-            @Override
-            public int compare(DummyItem lhs, DummyItem rhs) {
-                return lhs.content.SSID.compareTo(rhs.content.SSID);
-            }
-        });
-    }
-
     /**
      * A dummy item representing a piece of content.
      */
-    public static class DummyItem {
+    public static class ScanItem {
 
         private static int global_idx = 0;
 
         public int idx;
         public ScanResult content;
 
-        public DummyItem(ScanResult content) {
+        public ScanItem(ScanResult content) {
             this.idx = ++global_idx;
             this.content = content;
         }

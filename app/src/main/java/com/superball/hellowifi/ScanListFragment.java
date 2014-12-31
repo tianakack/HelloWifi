@@ -1,23 +1,22 @@
 package com.superball.hellowifi;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.TextView;
-
 
 import com.superball.hellowifi.scan.ScanList;
 import com.superball.hellowifi.scan.ScanListAdapter;
+
+import java.util.Comparator;
 
 /**
  * A fragment representing a list of Items.
@@ -50,7 +49,14 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ArrayAdapter<ScanList.DummyItem> mAdapter;
+    private ScanListAdapter mAdapter;
+
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public ScanListFragment() {
+    }
 
     // TODO: Rename and change types of parameters
     public static ScanListFragment newInstance(String param1, String param2) {
@@ -60,13 +66,6 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public ScanListFragment() {
     }
 
     @Override
@@ -80,7 +79,7 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
 
         // TODO: Change Adapter to display your content
         mAdapter = new ScanListAdapter(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, ScanList.ITEMS);
+                R.layout.scan_list_item, R.id.scan_item_caption, ScanList.ITEMS);
     }
 
     @Override
@@ -141,6 +140,37 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
         }
     }
 
+    public void reload() {
+
+        Activity activity = getActivity();
+
+        if (activity == null) return;
+
+        ///
+        ScanList.clear();
+
+        WifiManager wifiManager = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
+
+        for (ScanResult scanResult : wifiManager.getScanResults()) {
+            ScanList.addItem(new ScanList.ScanItem(scanResult));
+        }
+
+        ///
+        mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+
+            @Override
+            public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+
+                return rhs.content.level - lhs.content.level;
+            }
+        });
+
+        mAdapter.notifyDataSetChanged();
+
+        ///
+        wifiManager.startScan();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -154,27 +184,6 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(int id);
-    }
-
-    public void reload() {
-
-        ///
-        ScanList.clear();
-
-        WifiManager wifiManager = (WifiManager)getActivity(). getSystemService(Context.WIFI_SERVICE);
-
-        for (ScanResult scanResult : wifiManager.getScanResults())
-        {
-            ScanList.addItem(new ScanList.DummyItem(scanResult));
-        }
-
-        ScanList.rearrange();
-
-        ///
-        mAdapter.notifyDataSetChanged();
-
-        ///
-        wifiManager.startScan();
     }
 
 }
