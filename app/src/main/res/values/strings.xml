@@ -9,8 +9,10 @@
     <string name="action_menu_sort_by_bssid">Sort By BSSID</string>
     <string name="action_menu_sort_by_rssi">Sort By RSSI</string>
     <string name="action_menu_sort_by_frequency">Sort By Frequency</string>
+    <string name="action_menu_sort_by_capabilities">Sort By Capabilities</string>
     <string name="scan_item_signal">ScanItemSignal</string>
     <string name="scan_item_detail">BSSID: %1$s\nRSSI: %2$d dBm\nFrequency: %3$.3f GHz\n%4$s</string>
     <string name="scan_item_security">ScanItemSecurity</string>
+    <string name="msg_wifi_disabled">Wifi disabled!</string>
 
 </resources>

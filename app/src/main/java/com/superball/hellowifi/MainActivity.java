@@ -1,17 +1,31 @@
 package com.superball.hellowifi;
 
+import android.content.Context;
+import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 
-public class MainActivity extends ActionBarActivity implements ScanListFragment.OnFragmentInteractionListener {
+public class MainActivity extends ActionBarActivity implements BlankFragment.OnFragmentInteractionListener, ScanListFragment.OnFragmentInteractionListener {
 
-    boolean mPendingExit = false;
+    ///
+    BlankFragment mBlankFragment = null;
+    ScanListFragment mScanListFragment = null;
+    ///
     android.os.Handler mHandler = null;
+    ///
+    boolean mPendingExit = false;
     Runnable mClearPendingExitRunnable = null;
+    ///
+    boolean mWifiEnabled = false;
+    Runnable mCheckWifiStatusRunnable = null;
+
+    ///
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 
     public void onFragmentInteraction(int id) {
     }
@@ -20,66 +34,68 @@ public class MainActivity extends ActionBarActivity implements ScanListFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, ScanListFragment.newInstance("", ""))
-                    .commit();
-        }
 
-        mPendingExit = false;
+        ///
+        mBlankFragment = BlankFragment.newInstance("", "");
+        mScanListFragment = ScanListFragment.newInstance("", "");
+
+        ///
         mHandler = new android.os.Handler();
+
+        ///
+        mPendingExit = false;
         mClearPendingExitRunnable = new Runnable() {
             @Override
             public void run() {
                 mPendingExit = false;
             }
         };
-    }
 
+        ///
+        mCheckWifiStatusRunnable = new Runnable() {
+            @Override
+            public void run() {
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+                WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+                if (wifiManager.isWifiEnabled()) {
 
-        ScanListFragment scanListFragment = (ScanListFragment) getFragmentManager().findFragmentById(R.id.container);
+                    if (!mWifiEnabled) {
 
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.action_reload: {
-                scanListFragment.reload();
+                        mWifiEnabled = true;
+
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.container, mScanListFragment)
+                                .commit();
+                    }
+
+                } else {
+
+                    if (mWifiEnabled) {
+
+                        mWifiEnabled = false;
+
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.container, mBlankFragment)
+                                .commit();
+                    }
+                }
+
+                ///
+                mHandler.postDelayed(mCheckWifiStatusRunnable, 2500);
             }
-            return true;
+        };
 
-            case R.id.action_menu_sort_by_ssid: {
-                scanListFragment.sort_by_ssid();
-            }
-            return true;
+        ///
+        mHandler.removeCallbacks(mCheckWifiStatusRunnable);
+        mHandler.post(mCheckWifiStatusRunnable);
 
-            case R.id.action_menu_sort_by_bssid: {
-                scanListFragment.sort_by_bssid();
-            }
-            return true;
-
-            case R.id.action_menu_sort_by_rssi: {
-                scanListFragment.sort_by_rssi();
-            }
-            return true;
-
-            case R.id.action_menu_sort_by_frequency: {
-                scanListFragment.sort_by_frequency();
-            }
-            return true;
+        ///
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, mBlankFragment)
+                    .commit();
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -99,4 +115,5 @@ public class MainActivity extends ActionBarActivity implements ScanListFragment.
             super.onBackPressed();
         }
     }
+
 }

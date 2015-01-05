@@ -7,6 +7,9 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -33,18 +36,15 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    SORT_TYPE mSortType = SORT_TYPE.SSID;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     private OnFragmentInteractionListener mListener;
-
     /**
      * The fragment's ListView/GridView.
      */
     private AbsListView mListView;
-
     /**
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
@@ -80,6 +80,8 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
         // TODO: Change Adapter to display your content
         mAdapter = new ScanListAdapter(getActivity(),
                 R.layout.scan_list_item, R.id.scan_item_caption, ScanList.ITEMS);
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -93,10 +95,6 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
-
-
-        reload();
-
         return view;
     }
 
@@ -117,6 +115,71 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
         mListener = null;
     }
 
+    @Override
+    public void onStart() {
+
+        reload();
+        sort(mSortType);
+
+        super.onStart();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_frag_scanlist, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.isCheckable()) {
+            item.setChecked(true);
+        }
+
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case R.id.action_reload: {
+                reload();
+                sort(mSortType);
+            }
+            return true;
+
+            case R.id.action_menu_sort_by_ssid: {
+                mSortType = SORT_TYPE.SSID;
+                sort(mSortType);
+            }
+            return true;
+
+            case R.id.action_menu_sort_by_bssid: {
+                mSortType = SORT_TYPE.BSSID;
+                sort(mSortType);
+            }
+            return true;
+
+            case R.id.action_menu_sort_by_rssi: {
+                mSortType = SORT_TYPE.RSSI;
+                sort(mSortType);
+            }
+            return true;
+
+            case R.id.action_menu_sort_by_frequency: {
+                mSortType = SORT_TYPE.Frequency;
+                sort(mSortType);
+            }
+            return true;
+
+            case R.id.action_menu_sort_by_capabilities: {
+                mSortType = SORT_TYPE.Capacities;
+                sort(mSortType);
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -156,71 +219,88 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
         }
 
         ///
-        mAdapter.sort(new Comparator<ScanList.ScanItem>() {
-
-            @Override
-            public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
-
-                return rhs.content.level - lhs.content.level;
-            }
-        });
-
-        mAdapter.notifyDataSetChanged();
-
-        ///
         wifiManager.startScan();
     }
 
-    public void sort_by_ssid() {
-        mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+    public void sort(SORT_TYPE sortType) {
 
-            @Override
-            public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+        switch (sortType) {
 
-                return lhs.content.SSID.compareTo(rhs.content.SSID);
+            case SSID: {
+
+                mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+
+                    @Override
+                    public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+
+                        return lhs.content.SSID.compareTo(rhs.content.SSID);
+                    }
+                });
             }
-        });
+            break;
+
+            case BSSID: {
+
+                mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+
+                    @Override
+                    public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+
+                        return lhs.content.BSSID.compareTo(rhs.content.BSSID);
+                    }
+                });
+            }
+            break;
+
+            case RSSI: {
+
+                mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+
+                    @Override
+                    public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+
+                        return rhs.content.level - lhs.content.level;
+                    }
+                });
+            }
+            break;
+
+            case Frequency: {
+
+                mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+
+                    @Override
+                    public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+
+                        return lhs.content.frequency - rhs.content.frequency;
+                    }
+                });
+            }
+            break;
+
+            case Capacities: {
+
+                mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+
+                    @Override
+                    public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+
+                        return lhs.content.capabilities.compareTo(rhs.content.capabilities);
+                    }
+                });
+            }
+            break;
+        }
 
         mAdapter.notifyDataSetChanged();
     }
 
-    public void sort_by_bssid() {
-        mAdapter.sort(new Comparator<ScanList.ScanItem>() {
-
-            @Override
-            public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
-
-                return lhs.content.BSSID.compareTo(rhs.content.BSSID);
-            }
-        });
-
-        mAdapter.notifyDataSetChanged();
-    }
-
-    public void sort_by_rssi() {
-        mAdapter.sort(new Comparator<ScanList.ScanItem>() {
-
-            @Override
-            public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
-
-                return rhs.content.level - lhs.content.level;
-            }
-        });
-
-        mAdapter.notifyDataSetChanged();
-    }
-
-    public void sort_by_frequency() {
-        mAdapter.sort(new Comparator<ScanList.ScanItem>() {
-
-            @Override
-            public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
-
-                return lhs.content.frequency - rhs.content.frequency;
-            }
-        });
-
-        mAdapter.notifyDataSetChanged();
+    public enum SORT_TYPE {
+        SSID,
+        BSSID,
+        RSSI,
+        Frequency,
+        Capacities
     }
 
     /**
