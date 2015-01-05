@@ -15,4 +15,11 @@
     <string name="scan_item_security">ScanItemSecurity</string>
     <string name="msg_wifi_disabled">Wifi disabled!</string>
 
+    <array name="actionbar_items">
+        <item>Network List</item>
+        <item>Spectrogram</item>
+    </array>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

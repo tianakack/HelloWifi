@@ -1,18 +1,25 @@
 package com.superball.hellowifi;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.widget.ArrayAdapter;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 
-public class MainActivity extends ActionBarActivity implements BlankFragment.OnFragmentInteractionListener, ScanListFragment.OnFragmentInteractionListener {
+public class MainActivity extends ActionBarActivity implements BlankFragment.OnFragmentInteractionListener, ScanListFragment.OnFragmentInteractionListener, SpectrogramFragment.OnFragmentInteractionListener {
 
+    ///
+    Fragment mFragment = null;
     ///
     BlankFragment mBlankFragment = null;
     ScanListFragment mScanListFragment = null;
+    SpectrogramFragment mSpectrogramFragment = null;
     ///
     android.os.Handler mHandler = null;
     ///
@@ -37,7 +44,8 @@ public class MainActivity extends ActionBarActivity implements BlankFragment.OnF
 
         ///
         mBlankFragment = BlankFragment.newInstance("", "");
-        mScanListFragment = ScanListFragment.newInstance("", "");
+        mFragment = mScanListFragment = ScanListFragment.newInstance("", "");
+        mSpectrogramFragment = SpectrogramFragment.newInstance("", "");
 
         ///
         mHandler = new android.os.Handler();
@@ -65,7 +73,7 @@ public class MainActivity extends ActionBarActivity implements BlankFragment.OnF
                         mWifiEnabled = true;
 
                         getFragmentManager().beginTransaction()
-                                .replace(R.id.container, mScanListFragment)
+                                .replace(R.id.container, mFragment)
                                 .commit();
                     }
 
@@ -96,6 +104,50 @@ public class MainActivity extends ActionBarActivity implements BlankFragment.OnF
                     .add(R.id.container, mBlankFragment)
                     .commit();
         }
+
+        ///
+
+        SpinnerAdapter adapter = ArrayAdapter.createFromResource(this,
+                R.array.actionbar_items, android.R.layout.simple_spinner_dropdown_item);
+
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        actionBar.setListNavigationCallbacks(adapter, new ActionBar.OnNavigationListener() {
+
+            @Override
+            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+
+                switch (itemPosition) {
+
+                    case 0: {
+                        mFragment = mScanListFragment;
+                    }
+                    break;
+
+                    case 1: {
+                        mFragment = mSpectrogramFragment;
+                    }
+                    break;
+                }
+
+                if (mWifiEnabled) {
+
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.container, mFragment)
+                            .commit();
+
+                } else {
+
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.container, mBlankFragment)
+                            .commit();
+                }
+
+                return false;
+            }
+
+        });
     }
 
     @Override
