@@ -10,9 +10,9 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_menu"
-        android:icon="@drawable/menu"
-        android:title="@string/action_menu"
+        android:id="@+id/action_sort"
+        android:icon="@drawable/sort"
+        android:title="@string/action_sort"
         app:showAsAction="always">
 
         <menu>
@@ -20,25 +20,24 @@
             <group android:checkableBehavior="single">
 
                 <item
-                    android:id="@+id/action_menu_sort_by_ssid"
-                    android:checked="true"
-                    android:title="@string/action_menu_sort_by_ssid" />
+                    android:id="@+id/action_sort_by_ssid"
+                    android:title="@string/action_sort_by_ssid" />
 
                 <item
-                    android:id="@+id/action_menu_sort_by_bssid"
-                    android:title="@string/action_menu_sort_by_bssid" />
+                    android:id="@+id/action_sort_by_bssid"
+                    android:title="@string/action_sort_by_bssid" />
 
                 <item
-                    android:id="@+id/action_menu_sort_by_rssi"
-                    android:title="@string/action_menu_sort_by_rssi" />
+                    android:id="@+id/action_sort_by_rssi"
+                    android:title="@string/action_sort_by_rssi" />
 
                 <item
-                    android:id="@+id/action_menu_sort_by_frequency"
-                    android:title="@string/action_menu_sort_by_frequency" />
+                    android:id="@+id/action_sort_by_frequency"
+                    android:title="@string/action_sort_by_frequency" />
 
                 <item
-                    android:id="@+id/action_menu_sort_by_capabilities"
-                    android:title="@string/action_menu_sort_by_capabilities" />
+                    android:id="@+id/action_sort_by_capabilities"
+                    android:title="@string/action_sort_by_capabilities" />
 
             </group>
 

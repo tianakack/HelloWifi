@@ -126,7 +126,32 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
         inflater.inflate(R.menu.menu_frag_scanlist, menu);
+
+        switch (mSortType) {
+
+            case SSID:
+                menu.findItem(R.id.action_sort_by_ssid).setChecked(true);
+                break;
+
+            case BSSID:
+                menu.findItem(R.id.action_sort_by_bssid).setChecked(true);
+                break;
+
+            case RSSI:
+                menu.findItem(R.id.action_sort_by_rssi).setChecked(true);
+                break;
+
+            case Frequency:
+                menu.findItem(R.id.action_sort_by_frequency).setChecked(true);
+                break;
+
+            case Capacities:
+                menu.findItem(R.id.action_sort_by_capabilities).setChecked(true);
+                break;
+        }
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -147,31 +172,31 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
             }
             return true;
 
-            case R.id.action_menu_sort_by_ssid: {
+            case R.id.action_sort_by_ssid: {
                 mSortType = SORT_TYPE.SSID;
                 sort(mSortType);
             }
             return true;
 
-            case R.id.action_menu_sort_by_bssid: {
+            case R.id.action_sort_by_bssid: {
                 mSortType = SORT_TYPE.BSSID;
                 sort(mSortType);
             }
             return true;
 
-            case R.id.action_menu_sort_by_rssi: {
+            case R.id.action_sort_by_rssi: {
                 mSortType = SORT_TYPE.RSSI;
                 sort(mSortType);
             }
             return true;
 
-            case R.id.action_menu_sort_by_frequency: {
+            case R.id.action_sort_by_frequency: {
                 mSortType = SORT_TYPE.Frequency;
                 sort(mSortType);
             }
             return true;
 
-            case R.id.action_menu_sort_by_capabilities: {
+            case R.id.action_sort_by_capabilities: {
                 mSortType = SORT_TYPE.Capacities;
                 sort(mSortType);
             }
