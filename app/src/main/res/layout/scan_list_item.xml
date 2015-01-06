@@ -1,58 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="@dimen/padding">
 
-    <ImageView
-        android:id="@+id/scan_item_signal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:contentDescription="@string/scan_item_signal"
-        android:src="@drawable/signal100" />
-
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_toLeftOf="@+id/scan_item_security"
-        android:layout_toRightOf="@+id/scan_item_signal"
-        android:orientation="vertical"
-        android:paddingLeft="@dimen/padding">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/scan_item_caption"
-            style="@style/MyTextView_Caption"
+        <ImageView
+            android:id="@+id/scan_item_signal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1" />
+            android:contentDescription="@string/scan_item_signal"
+            android:src="@drawable/signal100" />
 
-        <TextView
-            android:id="@+id/scan_item_detail"
-            style="@style/MyTextView_Detail"
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/padding">
+
+            <TextView
+                android:id="@+id/scan_item_caption"
+                style="@style/MyTextView_Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name" />
+
+            <TextView
+                android:id="@+id/scan_item_detail"
+                style="@style/MyTextView_Detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/scan_item_security"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2" />
-
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/scan_item_security"
+            android:src="@drawable/security" />
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/scan_item_security"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:contentDescription="@string/scan_item_security"
-        android:src="@drawable/security" />
 
     <TextView
         android:id="@+id/scan_item_org"
         style="@style/MyTextView_Extra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="3" />
-
-</RelativeLayout>
+        android:layout_gravity="right"
+        android:text="@string/app_name" />
+</LinearLayout>

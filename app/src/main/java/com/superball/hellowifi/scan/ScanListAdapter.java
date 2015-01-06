@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.superball.hellowifi.OUIHelper;
@@ -30,7 +30,7 @@ public class ScanListAdapter extends ArrayAdapter<ScanList.ScanItem> {
 
         View view = super.getView(position, convertView, parent);
 
-        if (view instanceof RelativeLayout) {
+        if (view instanceof LinearLayout) {
 
             ScanList.ScanItem item = getItem(position);
 

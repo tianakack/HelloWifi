@@ -3,7 +3,7 @@
 
     <string name="app_name">HelloWifi</string>
     <string name="pending_exit">Press \'BACK\' again to exit</string>
-    <string name="action_reload">Reload</string>
+    <string name="action_rescan">Rescan</string>
     <string name="action_sort">Sort</string>
     <string name="action_sort_by_ssid">Sort By SSID</string>
     <string name="action_sort_by_bssid">Sort By BSSID</string>

@@ -118,7 +118,7 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
     @Override
     public void onStart() {
 
-        reload();
+        rescan();
         sort(mSortType);
 
         super.onStart();
@@ -166,8 +166,8 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
-            case R.id.action_reload: {
-                reload();
+            case R.id.action_rescan: {
+                rescan();
                 sort(mSortType);
             }
             return true;
@@ -228,7 +228,7 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
         }
     }
 
-    public void reload() {
+    public void rescan() {
 
         Activity activity = getActivity();
 

@@ -4,9 +4,9 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/action_reload"
-        android:icon="@drawable/reload"
-        android:title="@string/action_reload"
+        android:id="@+id/action_rescan"
+        android:icon="@drawable/rescan"
+        android:title="@string/action_rescan"
         app:showAsAction="always" />
 
     <item
