@@ -106,7 +106,6 @@ public class MainActivity extends ActionBarActivity implements BlankFragment.OnF
         }
 
         ///
-
         SpinnerAdapter adapter = ArrayAdapter.createFromResource(this,
                 R.array.actionbar_items, android.R.layout.simple_spinner_dropdown_item);
 
@@ -148,6 +147,9 @@ public class MainActivity extends ActionBarActivity implements BlankFragment.OnF
             }
 
         });
+
+        ///
+        OUIHelper.createInstance(MainActivity.this);
     }
 
     @Override

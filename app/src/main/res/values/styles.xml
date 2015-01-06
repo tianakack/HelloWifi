@@ -30,6 +30,11 @@
         <item name="android:textSize">13dp</item>
     </style>
 
+    <style name="MyTextView_Extra">
+        <item name="android:textColor">@color/light_gray</item>
+        <item name="android:textSize">10dp</item>
+    </style>
+
     <color name="dark_white">#DDD</color>
     <color name="light_gray">#BBB</color>
     <color name="gray">#888</color>
@@ -38,5 +43,6 @@
     <color name="red">#800</color>
     <color name="green">#080</color>
     <color name="blue">#008</color>
+    <color name="color488">#488</color>
 
 </resources>

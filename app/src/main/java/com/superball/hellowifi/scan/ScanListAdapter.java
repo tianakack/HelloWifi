@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.superball.hellowifi.OUIHelper;
 import com.superball.hellowifi.R;
 
 import java.util.List;
@@ -54,9 +55,9 @@ public class ScanListAdapter extends ArrayAdapter<ScanList.ScanItem> {
             }
 
             ///
-            TextView text = (TextView) view.findViewById(R.id.scan_item_detail);
+            TextView text_detail = (TextView) view.findViewById(R.id.scan_item_detail);
 
-            text.setText(
+            text_detail.setText(
                     mContext.getString(R.string.scan_item_detail,
                             item.content.BSSID.toUpperCase(),
                             item.content.level,
@@ -78,6 +79,11 @@ public class ScanListAdapter extends ArrayAdapter<ScanList.ScanItem> {
 
                 image_security.setVisibility(View.GONE);
             }
+
+            ///
+            TextView text_org = (TextView) view.findViewById(R.id.scan_item_org);
+
+            text_org.setText(OUIHelper.getORG(item.content.BSSID.toUpperCase().substring(0, 8)));
         }
 
         return view;
