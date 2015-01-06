@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TabHost;
+import android.widget.TabWidget;
 
 
 /**
@@ -64,7 +66,23 @@ public class SpectrogramFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_spectrogram, container, false);
+        View view = inflater.inflate(R.layout.fragment_spectrogram, container, false);
+
+        TabHost tabHost = (TabHost) view.findViewById(R.id.tabHost);
+
+        tabHost.setup();
+
+        tabHost.addTab(tabHost.newTabSpec("tab1")
+                .setIndicator("2.4G")
+                .setContent(R.id.tab1));
+
+        tabHost.addTab(tabHost.newTabSpec("tab2")
+                .setIndicator("5G")
+                .setContent(R.id.tab2));
+
+        TabWidget tabWidget = tabHost.getTabWidget();
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
