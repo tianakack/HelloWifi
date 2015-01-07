@@ -1,4 +1,4 @@
-package com.superball.hellowifi;
+package com.superball.hellowifi.ScanList;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -16,8 +16,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
-import com.superball.hellowifi.scan.ScanList;
-import com.superball.hellowifi.scan.ScanListAdapter;
+import com.superball.hellowifi.R;
 
 import java.util.Comparator;
 

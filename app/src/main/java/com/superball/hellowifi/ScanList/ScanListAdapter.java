@@ -1,4 +1,4 @@
-package com.superball.hellowifi.scan;
+package com.superball.hellowifi.ScanList;
 
 import android.content.Context;
 import android.view.View;

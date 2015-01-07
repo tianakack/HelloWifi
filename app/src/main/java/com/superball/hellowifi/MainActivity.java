@@ -11,6 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import com.superball.hellowifi.ScanList.ScanListFragment;
+import com.superball.hellowifi.Spectrogram.SpectrogramFragment;
+
 
 public class MainActivity extends ActionBarActivity implements BlankFragment.OnFragmentInteractionListener, ScanListFragment.OnFragmentInteractionListener, SpectrogramFragment.OnFragmentInteractionListener {
 

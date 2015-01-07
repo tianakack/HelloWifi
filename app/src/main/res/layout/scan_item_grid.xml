@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.superball.hellowifi.ScanListFragment">
+    tools:context="com.superball.hellowifi.ScanList.ScanListFragment">
 
     <GridView
         android:id="@android:id/list"

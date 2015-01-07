@@ -1,4 +1,4 @@
-package com.superball.hellowifi;
+package com.superball.hellowifi.Spectrogram;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
+
+import com.superball.hellowifi.R;
 
 
 /**
@@ -20,11 +23,13 @@ import android.widget.TabWidget;
  * create an instance of this fragment.
  */
 public class SpectrogramFragment extends Fragment {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    ///
+    private String title = "Signal Strength";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -65,10 +70,8 @@ public class SpectrogramFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_spectrogram, container, false);
-
-        TabHost tabHost = (TabHost) view.findViewById(R.id.tabHost);
+        ///
+        TabHost tabHost = (TabHost) inflater.inflate(R.layout.fragment_spectrogram, container, false);
 
         tabHost.setup();
 
@@ -80,9 +83,15 @@ public class SpectrogramFragment extends Fragment {
                 .setIndicator("5G")
                 .setContent(R.id.tab2));
 
+        ///
         TabWidget tabWidget = tabHost.getTabWidget();
 
-        return view;
+        ///
+        LinearLayout linearLayout1 = (LinearLayout) tabHost.findViewById(R.id.tab1);
+
+        linearLayout1.addView(new SpectrogramView(getActivity()));
+
+        return tabHost;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

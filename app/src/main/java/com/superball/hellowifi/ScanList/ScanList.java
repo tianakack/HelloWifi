@@ -1,4 +1,4 @@
-package com.superball.hellowifi.scan;
+package com.superball.hellowifi.ScanList;
 
 import android.net.wifi.ScanResult;
 import android.util.SparseArray;
