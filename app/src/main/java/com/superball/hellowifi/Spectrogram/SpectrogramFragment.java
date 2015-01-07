@@ -2,9 +2,15 @@ package com.superball.hellowifi.Spectrogram;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.net.Uri;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -12,6 +18,7 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 
 import com.superball.hellowifi.R;
+import com.superball.hellowifi.ScanList.ScanList;
 
 
 /**
@@ -28,6 +35,11 @@ public class SpectrogramFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    ///
+    SpectrogramView mSpectrogramView = null;
+    ///
+    android.os.Handler mHandler = null;
+    Runnable mScanRunnable = null;
     ///
     private String title = "Signal Strength";
     // TODO: Rename and change types of parameters
@@ -65,6 +77,24 @@ public class SpectrogramFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        setHasOptionsMenu(true);
+
+        mSpectrogramView = new SpectrogramView(getActivity());
+
+        mHandler = new android.os.Handler();
+        mScanRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                rescan();
+                mSpectrogramView.postInvalidate();
+
+
+                mHandler.removeCallbacks(mScanRunnable);
+                mHandler.postDelayed(mScanRunnable, 5000);
+            }
+        };
     }
 
     @Override
@@ -89,7 +119,7 @@ public class SpectrogramFragment extends Fragment {
         ///
         LinearLayout linearLayout1 = (LinearLayout) tabHost.findViewById(R.id.tab1);
 
-        linearLayout1.addView(new SpectrogramView(getActivity()));
+        linearLayout1.addView(mSpectrogramView);
 
         return tabHost;
     }
@@ -116,6 +146,62 @@ public class SpectrogramFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onStart() {
+
+        mHandler.removeCallbacks(mScanRunnable);
+        mHandler.post(mScanRunnable);
+
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+
+        mHandler.removeCallbacks(mScanRunnable);
+
+        super.onStop();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        inflater.inflate(R.menu.menu_frag_spectrogram, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_rescan: {
+                rescan();
+                mSpectrogramView.postInvalidate();
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void rescan() {
+
+        Activity activity = getActivity();
+
+        if (activity == null) return;
+
+        ///
+        ScanList.clear();
+
+        WifiManager wifiManager = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
+
+        for (ScanResult scanResult : wifiManager.getScanResults()) {
+            ScanList.addItem(new ScanList.ScanItem(scanResult));
+        }
+
+        ///
+        wifiManager.startScan();
     }
 
     /**

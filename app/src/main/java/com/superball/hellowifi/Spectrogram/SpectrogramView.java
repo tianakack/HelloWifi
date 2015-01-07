@@ -7,13 +7,12 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.View;
 
+import com.superball.hellowifi.ScanList.ScanList;
+
 /**
  * Created by TIAN on 2015/1/7.
  */
 public class SpectrogramView extends View {
-
-    ///
-    float fontHeight = 16;
 
     ///
     int yLabelWidth = 20;
@@ -23,6 +22,7 @@ public class SpectrogramView extends View {
     int paddingLeft = 10;
     ///
     float chartLeft = paddingLeft + yLabelWidth;
+    ///
     int paddingRight = 10;
     int paddingTop = 10;
     float chartTop = paddingTop;
@@ -35,31 +35,19 @@ public class SpectrogramView extends View {
     ///
     int xFine = xScaleParam[2] / 2;
     ///
-    int xCount = (xScaleParam[2] + xScaleParam[1] - xScaleParam[0]) / xScaleParam[3];
-    ///
     float signalCount = xScaleParam[2] / xScaleParam[3];
-    int[] yScaleParam = {-200, 0, 0, 50};
+    ///
+    int xCount = (xScaleParam[2] + xScaleParam[1] - xScaleParam[0]) / xScaleParam[3];
+    int[] yScaleParam = {-100, 0, 0, 25};
     int yFine = yScaleParam[2] / 2;
     int yCount = (yScaleParam[2] + yScaleParam[1] - yScaleParam[0]) / yScaleParam[3];
+
     ///
     float xScale = 50;
     float yScale = 100;
-    /* 声明Paint对象 */
-    private Paint mPaint = null;
 
     public SpectrogramView(Context context) {
         super(context);
-
-        ///
-        mPaint = new Paint();
-
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setAntiAlias(true);
-
-        ///
-        Paint.FontMetrics fm = mPaint.getFontMetrics();
-
-        fontHeight = fm.descent - fm.ascent;
     }
 
     @Override
@@ -78,54 +66,91 @@ public class SpectrogramView extends View {
         render(canvas);
 
         ///
-        drawSignal(canvas, new int[]{2437, -50});
+        for (ScanList.ScanItem scanItem : ScanList.ITEMS) {
+
+            drawSignal(canvas, scanItem);
+        }
+
     }
 
-    private void drawSignal(Canvas canvas, int[] data) {
+    private void drawSignal(Canvas canvas, ScanList.ScanItem scanItem) {
+
+        int red = (int) (Math.random() * 160);
+        int green = (int) (Math.random() * 160);
+        int blue = (int) (Math.random() * 160);
 
         ///
-        float signalLeft = chartLeft + xScale * ((float) (data[0] - xScaleParam[0]) / xScaleParam[3]);
+        Paint paint = new Paint();
+
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setAntiAlias(true);
+        paint.setColor(Color.rgb(red, green, blue));
+
+        ///
+        int rssi = Math.max(scanItem.content.level, yScaleParam[0]);
+
+        ///
+        float signalLeft = chartLeft + xScale * ((float) (scanItem.content.frequency - xScaleParam[0]) / xScaleParam[3]);
 
         float signalRight = signalLeft + xScale * signalCount;
 
         ///
-        float mark = (float) (data[1] - yScaleParam[0]) / (yScaleParam[1] - yScaleParam[0]);
+        float mark = (float) (rssi - yScaleParam[0]) / (yScaleParam[1] - yScaleParam[0]);
 
         float signalHeight = (chartBottom - chartTop) * mark;
 
         ///
         RectF rectf = new RectF(signalLeft, chartBottom - signalHeight, signalRight, chartBottom + signalHeight);
 
-        canvas.drawArc(rectf, 180, 180, false, mPaint);
+        canvas.drawArc(rectf, 180, 180, false, paint);
+
+        ///
+        float xLabel = (signalLeft + signalRight) / 2;
+        float yLabel = chartBottom - signalHeight;
+
+        canvas.rotate(-30, xLabel, yLabel);
+        canvas.drawText(scanItem.content.SSID, xLabel, yLabel, paint);
+        canvas.rotate(30, xLabel, yLabel);
     }
 
     private void render(Canvas canvas) {
 
         canvas.save();
 
+        ///
+        Paint paint = new Paint();
+
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setAntiAlias(true);
+
+        ///
+        Paint.FontMetrics fm = paint.getFontMetrics();
+
+        float fontHeight = fm.descent - fm.ascent;
+
         /*
         * <1>
         */
 
         ///
-        mPaint.setColor(Color.DKGRAY);
+        paint.setColor(Color.DKGRAY);
 
         ///
-        canvas.drawRect(chartLeft, chartTop, chartRight, chartBottom, mPaint);
+        canvas.drawRect(chartLeft, chartTop, chartRight, chartBottom, paint);
 
         /*
         * <2>
         */
 
         ///
-        mPaint.setColor(Color.LTGRAY);
+        paint.setColor(Color.LTGRAY);
 
         ///
         for (int i = 1; i < xCount; i++) {
 
             float xLine = chartLeft + xScale * i;
 
-            canvas.drawLine(xLine, chartTop, xLine, chartBottom, mPaint);
+            canvas.drawLine(xLine, chartTop, xLine, chartBottom, paint);
         }
 
         ///
@@ -133,7 +158,7 @@ public class SpectrogramView extends View {
 
             float yLine = chartTop + yScale * i;
 
-            canvas.drawLine(chartLeft, yLine, chartRight, yLine, mPaint);
+            canvas.drawLine(chartLeft, yLine, chartRight, yLine, paint);
         }
 
         /*
@@ -141,8 +166,8 @@ public class SpectrogramView extends View {
         */
 
         ///
-        mPaint.setColor(Color.GRAY);
-        mPaint.setTextAlign(Paint.Align.LEFT);
+        paint.setColor(Color.GRAY);
+        paint.setTextAlign(Paint.Align.LEFT);
 
         float xLabelTop = chartBottom + fontHeight;
 
@@ -156,12 +181,12 @@ public class SpectrogramView extends View {
             float xLine = chartLeft + xScale * i;
 
             canvas.rotate(30, xLine, xLabelTop);
-            canvas.drawText(Integer.toString(xValue), xLine, xLabelTop, mPaint);
+            canvas.drawText(Integer.toString(xValue), xLine, xLabelTop, paint);
             canvas.rotate(-30, xLine, xLabelTop);
         }
 
         ///
-        mPaint.setTextAlign(Paint.Align.RIGHT);
+        paint.setTextAlign(Paint.Align.RIGHT);
 
         float yLabelLeft = chartLeft;
 
@@ -175,7 +200,7 @@ public class SpectrogramView extends View {
             float yLine = chartBottom - yScale * i;
 
             canvas.rotate(-30, yLabelLeft, yLine);
-            canvas.drawText(Integer.toString(yValue), yLabelLeft, yLine, mPaint);
+            canvas.drawText(Integer.toString(yValue), yLabelLeft, yLine, paint);
             canvas.rotate(30, yLabelLeft, yLine);
         }
 

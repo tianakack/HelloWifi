@@ -93,6 +93,7 @@ public class MainActivity extends ActionBarActivity implements BlankFragment.OnF
                 }
 
                 ///
+                mHandler.removeCallbacks(mCheckWifiStatusRunnable);
                 mHandler.postDelayed(mCheckWifiStatusRunnable, 2500);
             }
         };
