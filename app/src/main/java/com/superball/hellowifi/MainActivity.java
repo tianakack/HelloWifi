@@ -7,6 +7,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
@@ -16,6 +17,9 @@ import com.superball.hellowifi.Spectrogram.SpectrogramFragment;
 
 
 public class MainActivity extends ActionBarActivity implements BlankFragment.OnFragmentInteractionListener, ScanListFragment.OnFragmentInteractionListener, SpectrogramFragment.OnFragmentInteractionListener {
+
+    ///
+    final static String ACTIONBAR_LIST_ITEM_POSITION = "actionbar.list.item_position";
 
     ///
     Fragment mFragment = null;
@@ -44,6 +48,8 @@ public class MainActivity extends ActionBarActivity implements BlankFragment.OnF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         ///
         mBlankFragment = BlankFragment.newInstance("", "");
@@ -99,17 +105,6 @@ public class MainActivity extends ActionBarActivity implements BlankFragment.OnF
         };
 
         ///
-        mHandler.removeCallbacks(mCheckWifiStatusRunnable);
-        mHandler.post(mCheckWifiStatusRunnable);
-
-        ///
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, mBlankFragment)
-                    .commit();
-        }
-
-        ///
         SpinnerAdapter adapter = ArrayAdapter.createFromResource(this,
                 R.array.actionbar_items, android.R.layout.simple_spinner_dropdown_item);
 
@@ -153,7 +148,45 @@ public class MainActivity extends ActionBarActivity implements BlankFragment.OnF
         });
 
         ///
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, mBlankFragment)
+                    .commit();
+        } else {
+            actionBar.setSelectedNavigationItem(savedInstanceState.getInt(ACTIONBAR_LIST_ITEM_POSITION));
+        }
+
+        ///
         OUIHelper.createInstance(MainActivity.this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        final ActionBar actionBar = getSupportActionBar();
+
+        outState.putInt(ACTIONBAR_LIST_ITEM_POSITION, actionBar.getSelectedNavigationIndex());
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onResume() {
+
+        ///
+        mHandler.removeCallbacks(mCheckWifiStatusRunnable);
+        mHandler.post(mCheckWifiStatusRunnable);
+
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+
+        ///
+        mHandler.removeCallbacks(mCheckWifiStatusRunnable);
+
+        super.onPause();
     }
 
     @Override

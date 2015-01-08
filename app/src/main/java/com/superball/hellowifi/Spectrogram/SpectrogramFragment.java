@@ -90,7 +90,6 @@ public class SpectrogramFragment extends Fragment {
                 rescan();
                 mSpectrogramView.postInvalidate();
 
-
                 mHandler.removeCallbacks(mScanRunnable);
                 mHandler.postDelayed(mScanRunnable, 5000);
             }
@@ -149,20 +148,20 @@ public class SpectrogramFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
+    public void onResume() {
 
         mHandler.removeCallbacks(mScanRunnable);
         mHandler.post(mScanRunnable);
 
-        super.onStart();
+        super.onResume();
     }
 
     @Override
-    public void onStop() {
+    public void onPause() {
 
         mHandler.removeCallbacks(mScanRunnable);
 
-        super.onStop();
+        super.onPause();
     }
 
     @Override

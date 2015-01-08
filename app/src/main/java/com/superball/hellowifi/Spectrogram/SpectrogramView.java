@@ -15,21 +15,23 @@ import com.superball.hellowifi.ScanList.ScanList;
 public class SpectrogramView extends View {
 
     ///
-    int yLabelWidth = 20;
-    int xLabelHeight = 40;
-
+    int frequencyMode = 2;
+    ///
+    int yLabelWidth = 30;
+    int xLabelHeight = 30;
+    ///
+    float xScale = 50;
+    float yScale = 100;
     ///
     int paddingLeft = 10;
     ///
     float chartLeft = paddingLeft + yLabelWidth;
-    ///
     int paddingRight = 10;
     int paddingTop = 10;
     float chartTop = paddingTop;
     int paddingBottom = 10;
     float chartRight = 240;
     float chartBottom = 360;
-
     ///
     int[] xScaleParam = {2412, 2472, 20, 5};
     ///
@@ -42,12 +44,12 @@ public class SpectrogramView extends View {
     int yFine = yScaleParam[2] / 2;
     int yCount = (yScaleParam[2] + yScaleParam[1] - yScaleParam[0]) / yScaleParam[3];
 
-    ///
-    float xScale = 50;
-    float yScale = 100;
-
     public SpectrogramView(Context context) {
         super(context);
+    }
+
+    public void setFrequencyMode(int mode) {
+        frequencyMode = mode;
     }
 
     @Override
@@ -68,13 +70,20 @@ public class SpectrogramView extends View {
         ///
         for (ScanList.ScanItem scanItem : ScanList.ITEMS) {
 
-            drawSignal(canvas, scanItem);
+            if (scanItem.content.frequency / 1000 == frequencyMode) {
+
+                drawSignal(canvas, scanItem);
+            }
         }
 
     }
 
     private void drawSignal(Canvas canvas, ScanList.ScanItem scanItem) {
 
+        ///
+        canvas.save();
+
+        ///
         int red = (int) (Math.random() * 160);
         int green = (int) (Math.random() * 160);
         int blue = (int) (Math.random() * 160);
@@ -108,9 +117,12 @@ public class SpectrogramView extends View {
         float xLabel = (signalLeft + signalRight) / 2;
         float yLabel = chartBottom - signalHeight;
 
-        canvas.rotate(-30, xLabel, yLabel);
+        canvas.rotate(-45, xLabel, yLabel);
         canvas.drawText(scanItem.content.SSID, xLabel, yLabel, paint);
-        canvas.rotate(30, xLabel, yLabel);
+        canvas.rotate(45, xLabel, yLabel);
+
+        ///
+        canvas.restore();
     }
 
     private void render(Canvas canvas) {
@@ -171,7 +183,7 @@ public class SpectrogramView extends View {
 
         float xLabelTop = chartBottom + fontHeight;
 
-        for (int i = 1; i < xCount; i++) {
+        for (int i = 1, iChannel = 0; i < xCount; i++) {
 
             int xValue = xScaleParam[0] - xFine + xScaleParam[3] * i;
 
@@ -180,8 +192,10 @@ public class SpectrogramView extends View {
 
             float xLine = chartLeft + xScale * i;
 
+            iChannel++;
+
             canvas.rotate(30, xLine, xLabelTop);
-            canvas.drawText(Integer.toString(xValue), xLine, xLabelTop, paint);
+            canvas.drawText(String.format("%d(%d)", xValue, iChannel), xLine, xLabelTop, paint);
             canvas.rotate(-30, xLine, xLabelTop);
         }
 
@@ -200,9 +214,19 @@ public class SpectrogramView extends View {
             float yLine = chartBottom - yScale * i;
 
             canvas.rotate(-30, yLabelLeft, yLine);
-            canvas.drawText(Integer.toString(yValue), yLabelLeft, yLine, paint);
+            canvas.drawText(String.format("%d ", yValue), yLabelLeft, yLine, paint);
             canvas.rotate(30, yLabelLeft, yLine);
         }
+
+        ///
+        paint.setTextAlign(Paint.Align.RIGHT);
+
+        canvas.drawText(" MHz ", chartRight, chartBottom + fontHeight, paint);
+
+        ///
+        paint.setTextAlign(Paint.Align.RIGHT);
+
+        canvas.drawText(" dBm ", chartLeft, chartTop + fontHeight, paint);
 
         ///
         canvas.restore();

@@ -115,12 +115,18 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
     }
 
     @Override
-    public void onStart() {
+    public void onResume() {
 
         rescan();
         sort(mSortType);
 
-        super.onStart();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
     }
 
     @Override
