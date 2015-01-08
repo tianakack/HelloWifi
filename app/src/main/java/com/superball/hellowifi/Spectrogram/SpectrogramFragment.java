@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
-import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,12 +12,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
 import com.superball.hellowifi.R;
-import com.superball.hellowifi.ScanList.ScanList;
 
 
 /**
@@ -80,8 +77,6 @@ public class SpectrogramFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        mSpectrogramView = new SpectrogramView(getActivity());
-
         mHandler = new android.os.Handler();
         mScanRunnable = new Runnable() {
             @Override
@@ -116,9 +111,9 @@ public class SpectrogramFragment extends Fragment {
         TabWidget tabWidget = tabHost.getTabWidget();
 
         ///
-        LinearLayout linearLayout1 = (LinearLayout) tabHost.findViewById(R.id.tab1);
+        mSpectrogramView = (SpectrogramView) tabHost.findViewById(R.id.tab1);
 
-        linearLayout1.addView(mSpectrogramView);
+        mSpectrogramView.setFrequencyMode(SpectrogramView.Mode.Mode_2G);
 
         return tabHost;
     }
@@ -191,13 +186,8 @@ public class SpectrogramFragment extends Fragment {
         if (activity == null) return;
 
         ///
-        ScanList.clear();
-
         WifiManager wifiManager = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
-
-        for (ScanResult scanResult : wifiManager.getScanResults()) {
-            ScanList.addItem(new ScanList.ScanItem(scanResult));
-        }
+        mSpectrogramView.setScanResults(wifiManager.getScanResults());
 
         ///
         wifiManager.startScan();

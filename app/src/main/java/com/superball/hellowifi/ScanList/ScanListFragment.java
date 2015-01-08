@@ -18,7 +18,9 @@ import android.widget.TextView;
 
 import com.superball.hellowifi.R;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -35,6 +37,10 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    /**
+     * An array of sample (dummy) items.
+     */
+    public List<ScanItem> mScanList;
     SORT_TYPE mSortType = SORT_TYPE.RSSI;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -76,9 +82,13 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        // TODO: Change Adapter to display your content
-        mAdapter = new ScanListAdapter(getActivity(),
-                R.layout.scan_list_item, R.id.scan_item_caption, ScanList.ITEMS);
+        // TODO: Change Adapter to display your scanResult
+
+        /**
+         * An array of sample (dummy) items.
+         */
+        mScanList = new ArrayList<>();
+        mAdapter = new ScanListAdapter(getActivity(), R.layout.scan_list_item, R.id.scan_item_caption, mScanList);
 
         setHasOptionsMenu(true);
     }
@@ -216,12 +226,12 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(ScanList.ITEMS.get(position).idx);
+            mListener.onScanListItemClick(mScanList.get(position).scanResult);
         }
     }
 
     /**
-     * The default content for this Fragment has a TextView that is shown when
+     * The default scanResult for this Fragment has a TextView that is shown when
      * the list is empty. If you would like to change the text, call this method
      * to supply the text it should use.
      */
@@ -240,12 +250,12 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
         if (activity == null) return;
 
         ///
-        ScanList.clear();
+        mScanList.clear();
 
         WifiManager wifiManager = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
 
         for (ScanResult scanResult : wifiManager.getScanResults()) {
-            ScanList.addItem(new ScanList.ScanItem(scanResult));
+            mScanList.add(ScanItem.new_instance(scanResult));
         }
 
         ///
@@ -258,12 +268,12 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
 
             case SSID: {
 
-                mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+                mAdapter.sort(new Comparator<ScanItem>() {
 
                     @Override
-                    public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+                    public int compare(ScanItem lhs, ScanItem rhs) {
 
-                        return lhs.content.SSID.compareTo(rhs.content.SSID);
+                        return lhs.scanResult.SSID.compareTo(rhs.scanResult.SSID);
                     }
                 });
             }
@@ -271,12 +281,12 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
 
             case BSSID: {
 
-                mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+                mAdapter.sort(new Comparator<ScanItem>() {
 
                     @Override
-                    public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+                    public int compare(ScanItem lhs, ScanItem rhs) {
 
-                        return lhs.content.BSSID.compareTo(rhs.content.BSSID);
+                        return lhs.scanResult.BSSID.compareTo(rhs.scanResult.BSSID);
                     }
                 });
             }
@@ -284,12 +294,12 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
 
             case RSSI: {
 
-                mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+                mAdapter.sort(new Comparator<ScanItem>() {
 
                     @Override
-                    public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+                    public int compare(ScanItem lhs, ScanItem rhs) {
 
-                        return rhs.content.level - lhs.content.level;
+                        return rhs.scanResult.level - lhs.scanResult.level;
                     }
                 });
             }
@@ -297,12 +307,12 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
 
             case Frequency: {
 
-                mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+                mAdapter.sort(new Comparator<ScanItem>() {
 
                     @Override
-                    public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+                    public int compare(ScanItem lhs, ScanItem rhs) {
 
-                        return lhs.content.frequency - rhs.content.frequency;
+                        return lhs.scanResult.frequency - rhs.scanResult.frequency;
                     }
                 });
             }
@@ -310,12 +320,12 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
 
             case Capacities: {
 
-                mAdapter.sort(new Comparator<ScanList.ScanItem>() {
+                mAdapter.sort(new Comparator<ScanItem>() {
 
                     @Override
-                    public int compare(ScanList.ScanItem lhs, ScanList.ScanItem rhs) {
+                    public int compare(ScanItem lhs, ScanItem rhs) {
 
-                        return lhs.content.capabilities.compareTo(rhs.content.capabilities);
+                        return lhs.scanResult.capabilities.compareTo(rhs.scanResult.capabilities);
                     }
                 });
             }
@@ -345,7 +355,7 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int id);
+        public void onScanListItemClick(ScanResult scanResult);
     }
 
 }

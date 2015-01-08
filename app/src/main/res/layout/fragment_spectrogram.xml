@@ -12,14 +12,14 @@
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="0dp"
             android:layout_weight="1">
 
-            <LinearLayout
+            <view
                 android:id="@+id/tab1"
+                class="com.superball.hellowifi.Spectrogram.SpectrogramView"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"></LinearLayout>
+                android:layout_height="fill_parent" />
 
             <LinearLayout
                 android:id="@+id/tab2"

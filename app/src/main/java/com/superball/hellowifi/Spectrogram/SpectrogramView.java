@@ -5,17 +5,31 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.net.wifi.ScanResult;
+import android.util.AttributeSet;
 import android.view.View;
 
-import com.superball.hellowifi.ScanList.ScanList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by TIAN on 2015/1/7.
  */
 public class SpectrogramView extends View {
 
+    int[] xScaleParam_2G = {2412, 2472, 20, 5};
     ///
-    int frequencyMode = 2;
+    int[] xScaleParam = xScaleParam_2G;
+    int xFine = xScaleParam[2] / 2;
+    ;
+    int xCount = (xScaleParam[2] + xScaleParam[1] - xScaleParam[0]) / xScaleParam[3];
+    float signalCount = xScaleParam[2] / xScaleParam[3];
+    int[] xScaleParam_5G = {5000, 5900, 20, 5};
+    ///
+    Mode frequencyMode = Mode.Mode_2G;
+    ///
+    List<ScanResult> emptyList = new ArrayList<>();
+    List<ScanResult> scanResults = emptyList;
     ///
     int yLabelWidth = 30;
     int xLabelHeight = 30;
@@ -33,23 +47,52 @@ public class SpectrogramView extends View {
     float chartRight = 240;
     float chartBottom = 360;
     ///
-    int[] xScaleParam = {2412, 2472, 20, 5};
-    ///
-    int xFine = xScaleParam[2] / 2;
-    ///
-    float signalCount = xScaleParam[2] / xScaleParam[3];
-    ///
-    int xCount = (xScaleParam[2] + xScaleParam[1] - xScaleParam[0]) / xScaleParam[3];
     int[] yScaleParam = {-100, 0, 0, 25};
     int yFine = yScaleParam[2] / 2;
     int yCount = (yScaleParam[2] + yScaleParam[1] - yScaleParam[0]) / yScaleParam[3];
 
-    public SpectrogramView(Context context) {
-        super(context);
+    public SpectrogramView(Context context, AttributeSet attrs) {
+
+        super(context, attrs);
+
+        initParams();
     }
 
-    public void setFrequencyMode(int mode) {
+    public void setFrequencyMode(Mode mode) {
+
         frequencyMode = mode;
+
+        initParams();
+    }
+
+    public void setScanResults(List<ScanResult> results) {
+
+        if (results != null) {
+
+            scanResults = results;
+
+        } else {
+
+            scanResults = emptyList;
+        }
+    }
+
+    private void initParams() {
+
+        if (frequencyMode == Mode.Mode_2G) {
+
+            xScaleParam = xScaleParam_2G;
+        }
+
+        if (frequencyMode == Mode.Mode_5G) {
+
+            xScaleParam = xScaleParam_5G;
+        }
+
+        ///
+        xFine = xScaleParam[2] / 2;
+        xCount = (xScaleParam[2] + xScaleParam[1] - xScaleParam[0]) / xScaleParam[3];
+        signalCount = xScaleParam[2] / xScaleParam[3];
     }
 
     @Override
@@ -68,61 +111,26 @@ public class SpectrogramView extends View {
         render(canvas);
 
         ///
-        for (ScanList.ScanItem scanItem : ScanList.ITEMS) {
+        for (ScanResult scanResult : scanResults) {
 
-            if (scanItem.content.frequency / 1000 == frequencyMode) {
+            if (frequencyMode == Mode.Mode_2G) {
 
-                drawSignal(canvas, scanItem);
+                if (scanResult.frequency / 1000 != 2) {
+
+                    continue;
+                }
             }
+
+            if (frequencyMode == Mode.Mode_5G) {
+
+                if (scanResult.frequency / 1000 != 5) {
+
+                    continue;
+                }
+            }
+
+            drawSignal(canvas, scanResult);
         }
-
-    }
-
-    private void drawSignal(Canvas canvas, ScanList.ScanItem scanItem) {
-
-        ///
-        canvas.save();
-
-        ///
-        int red = (int) (Math.random() * 160);
-        int green = (int) (Math.random() * 160);
-        int blue = (int) (Math.random() * 160);
-
-        ///
-        Paint paint = new Paint();
-
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setAntiAlias(true);
-        paint.setColor(Color.rgb(red, green, blue));
-
-        ///
-        int rssi = Math.max(scanItem.content.level, yScaleParam[0]);
-
-        ///
-        float signalLeft = chartLeft + xScale * ((float) (scanItem.content.frequency - xScaleParam[0]) / xScaleParam[3]);
-
-        float signalRight = signalLeft + xScale * signalCount;
-
-        ///
-        float mark = (float) (rssi - yScaleParam[0]) / (yScaleParam[1] - yScaleParam[0]);
-
-        float signalHeight = (chartBottom - chartTop) * mark;
-
-        ///
-        RectF rectf = new RectF(signalLeft, chartBottom - signalHeight, signalRight, chartBottom + signalHeight);
-
-        canvas.drawArc(rectf, 180, 180, false, paint);
-
-        ///
-        float xLabel = (signalLeft + signalRight) / 2;
-        float yLabel = chartBottom - signalHeight;
-
-        canvas.rotate(-45, xLabel, yLabel);
-        canvas.drawText(scanItem.content.SSID, xLabel, yLabel, paint);
-        canvas.rotate(45, xLabel, yLabel);
-
-        ///
-        canvas.restore();
     }
 
     private void render(Canvas canvas) {
@@ -230,6 +238,63 @@ public class SpectrogramView extends View {
 
         ///
         canvas.restore();
+    }
+
+    private void drawSignal(Canvas canvas, ScanResult scanResult) {
+
+        ///
+        canvas.save();
+
+        ///
+        int red = (int) (Math.random() * 160);
+        int green = (int) (Math.random() * 160);
+        int blue = (int) (Math.random() * 160);
+
+        ///
+        Paint paint = new Paint();
+
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setAntiAlias(true);
+        paint.setColor(Color.rgb(red, green, blue));
+
+        ///
+        int rssi = Math.max(scanResult.level, yScaleParam[0]);
+
+        ///
+        float signalLeft = chartLeft + xScale * ((float) (scanResult.frequency - xScaleParam[0]) / xScaleParam[3]);
+
+        float signalRight = signalLeft + xScale * signalCount;
+
+        ///
+        float mark = (float) (rssi - yScaleParam[0]) / (yScaleParam[1] - yScaleParam[0]);
+
+        float signalHeight = (chartBottom - chartTop) * mark;
+
+        ///
+        RectF rectf = new RectF(signalLeft, chartBottom - signalHeight, signalRight, chartBottom + signalHeight);
+
+        canvas.drawArc(rectf, 180, 180, false, paint);
+
+        ///
+        float xLabel = (signalLeft + signalRight) / 2;
+        float yLabel = chartBottom - signalHeight;
+
+        canvas.rotate(-45, xLabel, yLabel);
+        canvas.drawText(scanResult.SSID, xLabel, yLabel, paint);
+        canvas.rotate(45, xLabel, yLabel);
+
+        ///
+        canvas.restore();
+    }
+
+    public enum Mode {
+        Mode_2G(2),
+        Mode_5G(5);
+        final int nativeInt;
+
+        Mode(int nativeInt) {
+            this.nativeInt = nativeInt;
+        }
     }
 }
 

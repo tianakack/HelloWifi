@@ -16,11 +16,11 @@ import java.util.List;
 /**
  * Created by TIAN on 2014/12/31.
  */
-public class ScanListAdapter extends ArrayAdapter<ScanList.ScanItem> {
+public class ScanListAdapter extends ArrayAdapter<ScanItem> {
 
     private Context mContext;
 
-    public ScanListAdapter(Context context, int resource, int textViewResourceId, List<ScanList.ScanItem> objects) {
+    public ScanListAdapter(Context context, int resource, int textViewResourceId, List<ScanItem> objects) {
         super(context, resource, textViewResourceId, objects);
         mContext = context;
     }
@@ -32,20 +32,20 @@ public class ScanListAdapter extends ArrayAdapter<ScanList.ScanItem> {
 
         if (view instanceof LinearLayout) {
 
-            ScanList.ScanItem item = getItem(position);
+            ScanItem item = getItem(position);
 
             ///
             ImageView image_signal = (ImageView) view.findViewById(R.id.scan_item_signal);
 
-            if (item.content.level > -50) {
+            if (item.scanResult.level > -50) {
 
                 image_signal.setImageResource(R.drawable.signal100);
 
-            } else if (item.content.level > -65) {
+            } else if (item.scanResult.level > -65) {
 
                 image_signal.setImageResource(R.drawable.signal75);
 
-            } else if (item.content.level > -80) {
+            } else if (item.scanResult.level > -80) {
 
                 image_signal.setImageResource(R.drawable.signal50);
 
@@ -59,17 +59,17 @@ public class ScanListAdapter extends ArrayAdapter<ScanList.ScanItem> {
 
             text_detail.setText(
                     mContext.getString(R.string.scan_item_detail,
-                            item.content.BSSID.toUpperCase(),
-                            item.content.level,
-                            item.content.frequency / 1000.0,
-                            item.content.capabilities
+                            item.scanResult.BSSID.toUpperCase(),
+                            item.scanResult.level,
+                            item.scanResult.frequency / 1000.0,
+                            item.scanResult.capabilities
                     )
             );
 
             ///
             ImageView image_security = (ImageView) view.findViewById(R.id.scan_item_security);
 
-            String capabilities = item.content.capabilities.toUpperCase();
+            String capabilities = item.scanResult.capabilities.toUpperCase();
 
             if (capabilities.contains("WPA") || capabilities.contains("WEP") || capabilities.contains("WAPI")) {
 
@@ -83,7 +83,7 @@ public class ScanListAdapter extends ArrayAdapter<ScanList.ScanItem> {
             ///
             TextView text_org = (TextView) view.findViewById(R.id.scan_item_org);
 
-            text_org.setText(OUIHelper.getORG(item.content.BSSID.toUpperCase().substring(0, 8)));
+            text_org.setText(OUIHelper.getORG(item.scanResult.BSSID.toUpperCase().substring(0, 8)));
         }
 
         return view;

@@ -2,7 +2,9 @@ package com.superball.hellowifi;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -12,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import com.superball.hellowifi.Detail.DetailActivity;
 import com.superball.hellowifi.ScanList.ScanListFragment;
 import com.superball.hellowifi.Spectrogram.SpectrogramFragment;
 
@@ -19,6 +22,7 @@ import com.superball.hellowifi.Spectrogram.SpectrogramFragment;
 public class MainActivity extends ActionBarActivity implements BlankFragment.OnFragmentInteractionListener, ScanListFragment.OnFragmentInteractionListener, SpectrogramFragment.OnFragmentInteractionListener {
 
     ///
+    final static String HELLOWIFI_SCANRESULT = "com.superball.hellowifi.scanresult";
     final static String ACTIONBAR_LIST_ITEM_POSITION = "actionbar.list.item_position";
 
     ///
@@ -41,7 +45,13 @@ public class MainActivity extends ActionBarActivity implements BlankFragment.OnF
 
     }
 
-    public void onFragmentInteraction(int id) {
+    public void onScanListItemClick(ScanResult scanResult) {
+
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+
+        intent.putExtra(HELLOWIFI_SCANRESULT, scanResult);
+
+        startActivity(intent);
     }
 
     @Override
@@ -50,6 +60,9 @@ public class MainActivity extends ActionBarActivity implements BlankFragment.OnF
         setContentView(R.layout.activity_main);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        ///
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right);
 
         ///
         mBlankFragment = BlankFragment.newInstance("", "");
