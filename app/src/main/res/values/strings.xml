@@ -7,7 +7,9 @@
     </array>
 
     <string name="app_name">HelloWifi</string>
+    <string name="hello_world">Hello world!</string>
     <string name="pending_exit">Press \'BACK\' again to exit</string>
+    <string name="action_about">About</string>
     <string name="action_rescan">Rescan</string>
     <string name="action_sort">Sort</string>
     <string name="action_sort_by_ssid">Sort By SSID</string>
@@ -19,5 +21,6 @@
     <string name="scan_item_detail">BSSID: %1$s\nRSSI: %2$d dBm\nFrequency: %3$.3f GHz\n%4$s</string>
     <string name="scan_item_security">ScanItemSecurity</string>
     <string name="msg_wifi_disabled">Wifi disabled!</string>
+    <string name="about_version">Version: %1$s</string>
 
 </resources>
