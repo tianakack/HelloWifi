@@ -88,7 +88,7 @@ public class ScanListFragment extends Fragment implements AbsListView.OnItemClic
          * An array of sample (dummy) items.
          */
         mScanList = new ArrayList<>();
-        mAdapter = new ScanListAdapter(getActivity(), R.layout.scan_list_item, R.id.scan_item_caption, mScanList);
+        mAdapter = new ScanListAdapter(getActivity(), R.layout.scan_list_item, R.id.scan_item_ssid, mScanList);
 
         setHasOptionsMenu(true);
     }

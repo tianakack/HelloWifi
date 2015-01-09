@@ -4,12 +4,14 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize My theme here. -->
 
+        <item name="actionBarSize">48dp</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
         <item name="android:spinnerDropDownItemStyle">@style/MyDropDownItemStyle</item>
     </style>
 
     <style name="MyActionBar" parent="Widget.AppCompat.ActionBar">
         <item name="background">@color/colorBar</item>
+        <item name="titleTextStyle">@style/MyTextAppearance</item>
     </style>
 
     <style name="MyDropDownItemStyle" parent="Widget.AppCompat.DropDownItem.Spinner">
@@ -30,7 +32,12 @@
         <item name="android:textSize">13dp</item>
     </style>
 
-    <style name="MyTextView_Extra">
+    <style name="MyTextView_Comment">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">12dp</item>
+    </style>
+
+    <style name="MyTextView_Remark">
         <item name="android:textColor">@color/light_gray</item>
         <item name="android:textSize">10dp</item>
     </style>

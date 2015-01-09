@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <array name="actionbar_items">
+        <item>Scan List</item>
+        <item>Channel Chart</item>
+    </array>
+
     <string name="app_name">HelloWifi</string>
     <string name="pending_exit">Press \'BACK\' again to exit</string>
     <string name="action_rescan">Rescan</string>
@@ -14,15 +19,5 @@
     <string name="scan_item_detail">BSSID: %1$s\nRSSI: %2$d dBm\nFrequency: %3$.3f GHz\n%4$s</string>
     <string name="scan_item_security">ScanItemSecurity</string>
     <string name="msg_wifi_disabled">Wifi disabled!</string>
-
-    <array name="actionbar_items">
-        <item>Scan List</item>
-        <item>Channel Chart</item>
-    </array>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_detail">Detail</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
 
 </resources>

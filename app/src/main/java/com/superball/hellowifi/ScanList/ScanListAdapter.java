@@ -55,9 +55,9 @@ public class ScanListAdapter extends ArrayAdapter<ScanItem> {
             }
 
             ///
-            TextView text_detail = (TextView) view.findViewById(R.id.scan_item_detail);
+            TextView text_info = (TextView) view.findViewById(R.id.scan_item_info);
 
-            text_detail.setText(
+            text_info.setText(
                     mContext.getString(R.string.scan_item_detail,
                             item.scanResult.BSSID.toUpperCase(),
                             item.scanResult.level,

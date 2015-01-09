@@ -22,7 +22,9 @@ import com.superball.hellowifi.Spectrogram.SpectrogramFragment;
 public class MainActivity extends ActionBarActivity implements BlankFragment.OnFragmentInteractionListener, ScanListFragment.OnFragmentInteractionListener, SpectrogramFragment.OnFragmentInteractionListener {
 
     ///
-    final static String HELLOWIFI_SCANRESULT = "com.superball.hellowifi.scanresult";
+    public final static String HELLOWIFI_SCANRESULT = "com.superball.hellowifi.scanresult";
+
+    ///
     final static String ACTIONBAR_LIST_ITEM_POSITION = "actionbar.list.item_position";
 
     ///

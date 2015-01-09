@@ -25,14 +25,14 @@
             android:paddingLeft="@dimen/padding">
 
             <TextView
-                android:id="@+id/scan_item_caption"
+                android:id="@+id/scan_item_ssid"
                 style="@style/MyTextView_Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name" />
 
             <TextView
-                android:id="@+id/scan_item_detail"
+                android:id="@+id/scan_item_info"
                 style="@style/MyTextView_Detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
 
     <TextView
         android:id="@+id/scan_item_org"
-        style="@style/MyTextView_Extra"
+        style="@style/MyTextView_Remark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"

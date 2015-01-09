@@ -21,7 +21,6 @@ public class SpectrogramView extends View {
     ///
     int[] xScaleParam = xScaleParam_2G;
     int xFine = xScaleParam[2] / 2;
-    ;
     int xCount = (xScaleParam[2] + xScaleParam[1] - xScaleParam[0]) / xScaleParam[3];
     float signalCount = xScaleParam[2] / xScaleParam[3];
     int[] xScaleParam_5G = {5000, 5900, 20, 5};
@@ -44,12 +43,11 @@ public class SpectrogramView extends View {
     int paddingTop = 10;
     float chartTop = paddingTop;
     int paddingBottom = 10;
+    ///
+    int[] yScaleParam = {-100, 0, 25};
+    int yCount = (yScaleParam[1] - yScaleParam[0]) / yScaleParam[2];
     float chartRight = 240;
     float chartBottom = 360;
-    ///
-    int[] yScaleParam = {-100, 0, 0, 25};
-    int yFine = yScaleParam[2] / 2;
-    int yCount = (yScaleParam[2] + yScaleParam[1] - yScaleParam[0]) / yScaleParam[3];
 
     public SpectrogramView(Context context, AttributeSet attrs) {
 
@@ -214,7 +212,7 @@ public class SpectrogramView extends View {
 
         for (int i = 1; i < yCount; i++) {
 
-            int yValue = yScaleParam[0] - yFine + yScaleParam[3] * i;
+            int yValue = yScaleParam[0] + yScaleParam[2] * i;
 
             if (yValue < yScaleParam[0]) continue;
             if (yValue > yScaleParam[1]) continue;
