@@ -6,6 +6,7 @@
 
         <item name="actionBarSize">48dp</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="android:windowContentOverlay">@null</item>
         <item name="android:spinnerDropDownItemStyle">@style/MyDropDownItemStyle</item>
     </style>
 
@@ -52,6 +53,6 @@
     <color name="dark_gray">#444</color>
     <color name="light_black">#222</color>
 
-    <color name="colorBar">#33B5E5</color>
+    <color name="colorBar">#0A4</color>
 
 </resources>
